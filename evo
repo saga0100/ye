@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+
+from colorama import init, Fore, Back, Style
+import random, os, pycurl, time, threading, requests
+import requests
+import socket
+import os
+import json
+
+
+
+def get_ip_address():
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+
+    current_dir = os.getcwd()
+
+
+    file_name = "auth.txt"
+
+
+    file_path = os.path.join(current_dir, file_name)
+
+
+    file = open(file_path, "w")
+
+
+    file.write("Please message xwqo.end to activate you\n")
+    file.write(F"your ip: {ip_address}")
+
+
+    file.close()
+
+    return ip_address
+
+    print(get_ip_address())
+
+def check_ip_authentication(ip_address, pastebin_url):
+    response = requests.get(pastebin_url)
+
+
+    if response.status_code == 200 and ip_address in response.text:
+        
+        init();
+        RED = "\033[1;31;40m";
+        GREEN = "\033[1;32;40m";
+        YELLOW = "\033[1;32;40m";
+        BLUE = "\033[1;37;40m";
+        WHITE = "\033[1;37;40m";
+        MAGENTA = "\033[1;35;40m";
+        ERROR = "[\x1b[31m-\x1b[39m]";
+        WHITE = "\033[1;37;40m";
+        BLUE = "\033[1;36;40m";
+        SUCCESS = "[\x1b[31m+\x1b[39m]";
+        INFO = "[\x1b[31m?\x1b[39m]";
+        INPUT = "[\x1b[31m*\x1b[39m]"
+
+        class Instagram():
+            def __init__(self):
+                self.attempts = 0
+                self.rs = 0
+                self.username = ""
+                self.rl = 0
+                self.not_claimed = True
+                self.running = True
+                with open('done.txt', 'r') as fd: self.sessions = fd.read().splitlines()
+                try:
+                    with open("settings.json", "r") as settings_file:
+                        self.settings = json.load(settings_file)
+                except FileNotFoundError:
+                    self.settings = None
+
+            def send_webhook(self):
+                try:
+                    with open("settings.json", "r") as settings_file:
+                        settings = json.load(settings_file)
+                        webhook_url = settings.get("webhook_url")
+
+                        if webhook_url:
+                            data = {
+                                "content": None,
+                                "embeds": [
+                                    {
+                                        "description": f":space_invader: | **ΣVΘLVΞD @{self.username}**",
+                                        "color": None,
+                                        "footer": {
+                                            "text": f"Attempts: {self.attempts} R/S: {self.rs}"
+                                        }
+                                    }
+                                ],
+                                "attachments": []
+                            }
+
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+
+                            response = requests.post(webhook_url, json=data, headers=headers)
+
+                            if response.status_code == 204:
+                                pass
+                            else:
+                                print("Failed to send webhook. Status code:", response.status_code)
+                        else:
+                            print("webhook_url not found in settings.json")
+                except FileNotFoundError:
+                    print("settings.json not found")
+
+
+            def rps(self):
+                while True: last = self.attempts;time.sleep(1);self.rs = self.attempts - last
+
+            def cURL_claim(self, curl, sess, fbid):
+                try:
+                    curl.setopt(pycurl.URL,
+                                "https://i.instagram.com/api/v1/bloks/apps/com.bloks.www.fxim.settings.username.change.async/")
+                    curl.setopt(pycurl.HTTPHEADER, [
+                        "User-agent: Instagram 212.0.0.38.119 Android (25/7.1.2; 300dpi; 1600x900; Asus; ASUS_Z01QD; ASUS_Z01QD; intel; en_US; 329675731)",
+                        f'cookie: sessionid={sess}'])
+                    curl.setopt(pycurl.POST, 1)
+                    curl.setopt(pycurl.SSL_VERIFYHOST, 0)
+                    curl.setopt(pycurl.SSL_VERIFYPEER, 0)
+                    curl.setopt(pycurl.PROXY, 'FTWt6aCTRyY7KB0gLE30DvXF5CaeWF:UkW7ZFQwCWFXvTDI@proxy.resi.gg:8082' )
+                    curl.setopt(pycurl.POSTFIELDS,
+                                'params={"client_input_params":{"username":"' + self.username + '","family_device_id":"5532130523412","identity_ids":["' + fbid + '"]},"server_params":{"operation_type":"MUTATE"}}&bloks_versioning_id=8dab28e76d3286a104a7f1c9e0c632386603a488cf584c9b49161c2f5182fe07')
+                    return curl.perform_rs()
+                except:
+                    return ""
+
+            def run(self):
+                curl = pycurl.Curl()
+                while self.running:
+                    session = random.choice(self.sessions)
+                    user, password, email, emailp, sess, fbid = session.split(":")
+                    response = self.cURL_claim(curl, sess, fbid)
+                    if f'"{instagram.username}\\' in response:
+                        if self.not_claimed:
+                            self.not_claimed = False
+                            self.running = False
+                            self.send_webhook()
+                            claimed_info = f"Username: @{self.username}\nSession: {sess}\nPassword: {password}\nEmail: {email}\nEmail Pass{emailp}"
+                            filename = f"{self.username}.txt"
+                            with open(filename, 'w') as file:
+                                file.write(claimed_info)
+                            print(
+                                f"\n{Fore.WHITE}[{Fore.RED}${Fore.WHITE}] ΣVΘLVΞD: {GREEN}@{instagram.username}{WHITE}\n")
+                            print(
+                                "\r{} Turbo stopped, exiting after {:,} attempts...".format(ERROR, instagram.attempts))
+                            os._exit(1)
+                    elif "Please try again later." in response:
+                        self.rl += 1
+                    else:
+                        self.attempts += 1
+        
+        instagram = Instagram()
+        os.system("clear")
+        print(f"{RED}[{WHITE}Σ{RED}]{WHITE} ΞVΘLUΤΙΘΠ CLΛΙΜΣR| {BLUE}V1.0.2")
+        print(f"{WHITE}[{GREEN}Δ{WHITE}] δεssιοπs: {GREEN}{len(instagram.sessions)}{WHITE}\n")
+        print(f"{WHITE}[{BLUE}Ω{WHITE}] ΤΛΓGΞΤ: ", end='');
+        instagram.username = input()
+        print(f"{WHITE}[{BLUE}Π{WHITE}] THRΞΛDS: ", end='')
+        threads = int(input())
+        print(f"\n{WHITE}[{MAGENTA}ζ{WHITE}] RΞΛDΥ ΤΘ ΣVΘLVΞ:", end='');
+        xyz = input()
+        for i in range(threads):
+            threading.Thread(target=(instagram.run)).start()
+        threading.Thread(target=(instagram.rps)).start()
+        print(f"\n{Fore.WHITE}[{Fore.GREEN}+{Fore.WHITE}]ΣVOLVΙΝG...\n")
+        try:
+            while True:
+                time.sleep(0.01)
+                print(f"{WHITE}[{GREEN}ΣVO{WHITE}] Attempts {instagram.attempts} | R/S: {instagram.rs} | RL: {instagram.rl}", end='\r')
+        except KeyboardInterrupt:
+            instagram.running = False
+            print("\r{} Turbo stopped, exiting after {:,} attempts...".format(ERROR, instagram.attempts))
+            os._exit(1)
+    else:
+        print('Not allowed')
+
+pastebin_url = 'https://pastebin.com/raw/4nJS2EH5'
+check_ip_authentication(get_ip_address(), pastebin_url)
